@@ -24,20 +24,11 @@ if(isUserAuth()) {
     $first_name = makeSafetyString($_POST['reg_first_name']);
     $last_name = makeSafetyString($_POST['reg_last_name']);
     $email = makeSafetyString($_POST['reg_email']);
-    $login = makeSafetyString($_POST['reg_login']);
     $password = makeSafetyString($_POST['reg_password']);
 
-  /*
-    $first_name = makeSafetyString('uiuiui');
-    $last_name = makeSafetyString('sadasd');
-    $email = makeSafetyString('remsaisl@mail.ru');
-    $login = makeSafetyString('addaddd');
-    $password = makeSafetyString('rpassword');
-  */
     $first_name_length = mb_strlen($first_name);
     $last_name_length = mb_strlen($last_name);
     $email_length = mb_strlen($email);
-    $login_length = mb_strlen($login);
     $password_length = mb_strlen($password);
     if($first_name_length < SHORT_FIRST_NAME_LENGTH) {
       return view('reg.reg', ['is_cover_background'=>true,'result'=>array('error_field'=>'first_name', 'is_error'=>true,'error'=>array('error_code'=>3,'error_message'=>Lang::get('messages.short_firstname')),'status'=>'error')]);
@@ -55,13 +46,6 @@ if(isUserAuth()) {
       return view('reg.reg', ['is_cover_background'=>true,'result'=>array('error_field'=>'last_name', 'is_error'=>true,'error'=>array('error_code'=>8,'error_message'=>Lang::get('messages.incorrect_last_name')),'status'=>'error')]);
     }
 
-    if($login_length < SHORT_LOGIN_LENGTH) {
-      return view('reg.reg', ['is_cover_background'=>true,'result'=>array('error_field'=>'login','is_error'=>true,'error'=>array('error_code'=>9,'error_message'=>Lang::get('messages.short_login')),'status'=>'error')]);
-    } else if($login_length > LONG_LOGIN_LENGTH) {
-      return view('reg.reg', ['is_cover_background'=>true,'result'=>array('error_field'=>'login','is_error'=>true,'error'=>array('error_code'=>10,'error_message'=>Lang::get('messages.long_login')),'status'=>'error')]);
-    } else if(!preg_match("/^[a-zA-Zа-яА-Я0-9+_@.-]*$/u",$login)) {
-      return view('reg.reg', ['is_cover_background'=>true,'result'=>array('error_field'=>'login', 'is_error'=>true,'error'=>array('error_code'=>11,'error_message'=>Lang::get('messages.incorrect_login')),'status'=>'error')]);
-    }
 
     if($email_length < SHORT_EMAIL_LENGTH) {
       return view('reg.reg', ['is_cover_background'=>true,'result'=>array('error_field'=>'email','is_error'=>true,'error'=>array('error_code'=>12,'error_message'=>Lang::get('messages.short_email')),'status'=>'error')]);
@@ -86,12 +70,6 @@ if(isUserAuth()) {
       return view('reg.reg', ['is_cover_background'=>true,'result'=>array('is_error'=>true,'error'=>array('error_code'=>1,'error_message'=>  Lang::get('messages.user_registered')), 'status'=>'error','is_cover_background'=>true)]);
     }
 
-    $is_login_registered = DB::table('users')->where('login', $login)->get();
-    $is_login_registered = json_decode(json_encode($is_login_registered), true);
-
-    if(!empty($is_login_registered[0]['id'])) {
-      return view('reg.reg', ['is_cover_background'=>true,'result'=>array('is_error'=>true,'error'=>array('error_code'=>2,'error_message'=>Lang::get('messages.login_exist')),'status'=>'error','is_cover_background'=>true)]);
-    }
 
     $this->crypto = new Crypto;
     $password_hashing = $this->crypto->passwordHashing($password);
@@ -108,7 +86,7 @@ if(isUserAuth()) {
   'first_name'=>$first_name, 
   'last_name'=>$last_name, 
   'email'=>$email, 
-  'login'=>$login,   'salt'=>$salt,
+  'login'=>'',   'salt'=>$salt,
   'hashed_password'=>$hashed_password, 
   'reg_ip'=>$reg_ip, 
   'lang'=>$lang, 
@@ -129,7 +107,6 @@ if(isUserAuth()) {
     session(['user_id'=>$reg_id]);
     session(['user_first_name'=>$first_name]);
     session(['user_last_name'=>$last_name]);
-    session(['user_login'=>$login]);
     session(['user_email'=>$email]);
     Log::notice($reg_id);
     return redirect('/');
