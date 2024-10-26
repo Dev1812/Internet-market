@@ -1,8 +1,7 @@
 <?php
 include SITE_ROOT.'/resources/views/tpl/head.blade.php';
 include SITE_ROOT.'/resources/views/tpl/right_bar.blade.php';
- include SITE_ROOT.'/resources/views/tpl/sidebar.blade.php';
-
+include SITE_ROOT.'/resources/views/tpl/sidebar.blade.php';
 ?>
 
 
@@ -11,32 +10,38 @@ include SITE_ROOT.'/resources/views/tpl/right_bar.blade.php';
 </style>
 
 
-<form style="width:31%;margin:77px	 auto;border: 1px solid #CCC;padding: 17px 37px;border-radius: 9px;background-color: #FFF;">
-
+<form action="" method="POST" style="width:31%;margin:77px	 auto;border: 1px solid #CCC;padding: 17px 37px;border-radius: 9px;background-color: #FFF;">
+{{ csrf_field() }}
 <p class="fs-2">Регистрация</p>
+  <?php
+
+if(!empty($result)) {
+  var_dump($result);
+}
+  ?>
   <div class="mb-3">
     <label for="exampleInputEmail1" class="form-label">Имя</label>
-    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="reg_first_name">
 
   </div>
   <div class="mb-3">
     <label for="exampleInputEmail1" class="form-label">Фамилия</label>
-    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="reg_last_name">
 
   </div>
   <div class="mb-3">
     <label for="exampleInputEmail1" class="form-label">Email</label>
-    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+    <input type="text" class="form-control" name="reg_email" id="exampleInputEmail1" aria-describedby="emailHelp">
 
   </div>
   <div class="mb-3">
     <label for="exampleInputEmail1" class="form-label">Пароль</label>
-    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+    <input type="text" class="form-control" name="reg_password" id="exampleInputEmail1" aria-describedby="emailHelp">
 
   </div>
-
-
-  <button type="submit" class="btn btn-primary" style="width:100%">Зарегестрироваться</button>
+  <input type="submit" class="btn btn-primary" name="reg_submit" style="width:100%" value="Зарегестрироваться">
+</FORM>
+  
   <div style="margin-top: 14px;">
   	<a href="" style="text-decoration: none;">Войти</a>
   </div></form>
